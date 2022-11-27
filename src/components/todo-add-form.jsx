@@ -33,12 +33,11 @@ export default function TodoAddForm(){
 
     return(
         <>
-            <TextField onKeyDown={checkIsEnter} onChange={handleChange} value={todo} id="todoBody" fullWidth label="Todo nuevo" variant="outlined" />
-            <Tooltip title="Agregar">
+            <TextField onKeyDown={checkIsEnter} onChange={handleChange} value={todo} fullWidth label="Agregar nueva nota" variant="outlined" InputProps={{endAdornment:             <Tooltip title="Agregar">
                 <IconButton onClick={addTodo}>
                     <AddIcon />
                 </IconButton>
-            </Tooltip>
+            </Tooltip>}}/>
         </>
     )
 }

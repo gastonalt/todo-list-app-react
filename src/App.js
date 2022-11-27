@@ -3,6 +3,7 @@ import './App.css';
 import Header from './components/header';
 import TodoAddForm from './components/todo-add-form';
 import TodoList from './components/todo-list';
+import ToolZone from './components/tool-zone';
 
 function App() {
   return (
@@ -11,6 +12,9 @@ function App() {
       <BodyContainer>
         <TodoAddZoneContainer>
           <TodoAddForm/>
+          <ToolZoneContainer>
+            <ToolZone/>
+          </ToolZoneContainer>
         </TodoAddZoneContainer>
         <TodoListContainer>
           <TodoList/>
@@ -20,9 +24,12 @@ function App() {
   );
 }
 
+const ToolZoneContainer = styled.div`
+  margin-top: 10px;
+  text-align: center;
+`;
+
 const TodoAddZoneContainer = styled.div`
-  display: flex;
-  justify-content: center;
   width:50%;
   margin: 20px auto;
 `;
