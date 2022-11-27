@@ -26,11 +26,29 @@ export const todoListSlice = createSlice({
     deleteById: (state, action)=>{
       state.todos = state.todos.filter(filtered=> action.payload.id !== filtered.id);
       if(state.todos.length === 0) state.currentIdCounter = 0;
+    },
+    MarkAllAsComplete: (state)=>{
+      return{
+        ...state,
+        todos: state.todos.map((todo)=> true ? {...todo, completado: true} : null)
+      }
+    },
+    MarkAllAsIncomplete: (state)=>{
+      return{
+        ...state,
+        todos: state.todos.map((todo)=> true ? {...todo, completado: false} : null)
+      }
+    },
+    DeleteAll: (state)=>{
+      return{
+        todos: [],
+        currentIdCounter: 0
+      }
     }
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { add, toggleEstado, deleteById } = todoListSlice.actions
+export const { add, toggleEstado, deleteById, MarkAllAsComplete, MarkAllAsIncomplete, DeleteAll } = todoListSlice.actions
 
 export default todoListSlice.reducer

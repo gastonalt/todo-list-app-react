@@ -8,7 +8,7 @@ export default function Header(){
             <Toolbar>
                 <Box sx={{ textAlign: 'center' }}>
                     <Typography variant="h6" sx={{ my: 2 }}>
-                        TodoApp
+                        App para tomar notas by: gastonalt :)
                     </Typography>
                 </Box>
             </Toolbar>

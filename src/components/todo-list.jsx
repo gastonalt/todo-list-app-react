@@ -14,6 +14,7 @@ export default function TodoList(){
 
     const SpaceBetweenCardsInactivo= styled.div`
         opacity: .5;
+        margin: 10px 0px;
     `
 
     return(

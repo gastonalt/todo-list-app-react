@@ -32,6 +32,10 @@ const ToolZoneContainer = styled.div`
 const TodoAddZoneContainer = styled.div`
   width:50%;
   margin: 20px auto;
+  @media (max-width:500px){
+    width: 99%;
+    margin: auto;
+  }
 `;
 
 const BodyContainer = styled.div`
@@ -41,6 +45,10 @@ const BodyContainer = styled.div`
 const TodoListContainer = styled.div`
   width:50%;
   margin: auto;
+  @media (max-width:500px){
+    width: 99%;
+    margin: auto;
+  }
 `;
 
 export default App;
