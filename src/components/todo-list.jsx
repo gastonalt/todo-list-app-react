@@ -18,11 +18,13 @@ export default function TodoList(){
 
     return(
         <>
-            <h1>Todos</h1>
+            {
+                todosSinCompletar.length > 0 ? <h1>Todos</h1> : null
+            }
             {todosSinCompletar.map((todo, i)=>{
                 return(
                     <SpaceBetweenCards key={i}>
-                        <Todo todo={todo} style={{marginBottom: '5px'}} />
+                        <Todo todo={todo} />
                     </SpaceBetweenCards>
                 )
             })}

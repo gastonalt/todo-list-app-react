@@ -18,13 +18,14 @@ export const todoListSlice = createSlice({
       return { 
         ...state, 
         todos: state.todos.map(
-            (content, i) => i === 1 ? {...content, completado: !action.payload.completado}
+            (content, i) => content.id === action.payload.id ? {...content, completado: !action.payload.completado}
                                     : content
         )
      }
     },
     deleteById: (state, action)=>{
       state.todos = state.todos.filter(filtered=> action.payload.id !== filtered.id);
+      if(state.todos.length === 0) state.currentIdCounter = 0;
     }
   },
 })

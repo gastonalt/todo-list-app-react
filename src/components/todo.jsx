@@ -3,6 +3,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useDispatch } from "react-redux";
 import { deleteById, toggleEstado } from "../states/todoListSlice";
+import CancelIcon from '@mui/icons-material/Cancel';
 
 export default function Todo(props){
     
@@ -14,6 +15,7 @@ export default function Todo(props){
 
     const toggleEstadoTodo = ()=>{
         dispatch(toggleEstado(props.todo))
+        console.log(props.todo)
     }
 
     return(
@@ -30,7 +32,7 @@ export default function Todo(props){
         </Typography>
         </CardContent>
         <CardActions sx={{display: 'flex', justifyContent: 'space-between'}}>
-            <Button startIcon={<CheckCircleIcon/>} onClick={toggleEstadoTodo} variant="contained">
+            <Button startIcon={!props.todo.completado ? <CheckCircleIcon/> : <CancelIcon/>} onClick={toggleEstadoTodo} variant="contained">
                 Marcar como {props.todo.completado ? 'Incompleto' : 'Completado'}
             </Button>
             <Button startIcon={<DeleteIcon/>} onClick={deleteHandler}>
