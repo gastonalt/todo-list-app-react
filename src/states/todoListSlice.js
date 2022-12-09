@@ -9,7 +9,7 @@ export const todoListSlice = createSlice({
   reducers: {
     add: (state,action) => {
       action.payload.id = state.currentIdCounter;
-      state.todos.push(action.payload);
+      state.todos.unshift(action.payload);
       state.currentIdCounter ++;
     },
     toggleEstado: (state,action) => {
@@ -18,10 +18,9 @@ export const todoListSlice = createSlice({
       return { 
         ...state, 
         todos: state.todos.map(
-            (content, i) => content.id === action.payload.id ? {...content, completado: !action.payload.completado}
-                                    : content
+            (content, i) => content.id === action.payload.id ? {...content, completado: !action.payload.completado} : content
         )
-     }
+      }
     },
     deleteById: (state, action)=>{
       state.todos = state.todos.filter(filtered=> action.payload.id !== filtered.id);
@@ -44,11 +43,19 @@ export const todoListSlice = createSlice({
         todos: [],
         currentIdCounter: 0
       }
+    },
+    changeCategoria: (state, action)=>{
+      return { 
+        ...state,
+        todos: state.todos.map(
+            (content, i) => content.id === action.payload.id ? {...content, categoriaId: action.payload.categoriaId} : content
+        )
+      }
     }
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { add, toggleEstado, deleteById, MarkAllAsComplete, MarkAllAsIncomplete, DeleteAll } = todoListSlice.actions
+export const { add, toggleEstado, deleteById, MarkAllAsComplete, MarkAllAsIncomplete, DeleteAll, changeCategoria } = todoListSlice.actions
 
 export default todoListSlice.reducer

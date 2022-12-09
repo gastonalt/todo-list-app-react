@@ -1,17 +1,51 @@
 import TextField from '@mui/material/TextField';
 import AddIcon from '@mui/icons-material/Add';
-import { IconButton, InputBase, MenuItem, Select, Tooltip } from '@mui/material';
+import { IconButton, MenuItem, Select, Tooltip } from '@mui/material';
 import { useState } from 'react';
+import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Todo } from '../models/todo';
 import { add } from '../states/todoListSlice';
-import { styled } from '@mui/material/styles';
+import styled from '@emotion/styled';
 import CircleIcon from '@mui/icons-material/Circle';
+import { addCategoria, resetCategorias } from '../states/categoriasSlice';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Slide from '@mui/material/Slide';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+const FlexInputContainer = styled.div`
+  display:flex;
+`
 
 export default function TodoAddForm(){
 
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+
+    const handleClose = () => {
+      setOpen(false);
+    };
+
     const count = useSelector((state) => state.todoList.currentIdCounter)
     const dispatch = useDispatch()
+
+    const categorias = useSelector((state) => state.categoriasSlice.categorias)
+
+    const todos = useSelector((state) => state.todoList.todos)
+
+    const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(categorias[0].id);
 
     const [todo, setTodo] = useState('');
 
@@ -19,77 +53,105 @@ export default function TodoAddForm(){
         const newTodo = new Todo({
             id: count,
             text: todo,
-            fecha: new Date()
+            fecha: new Date(),
+            categoriaId: categoriaSeleccionada
         })
         dispatch(add(newTodo));
         setTodo('');
     }
 
     const checkIsEnter = event =>{
-        if (event.key === 'Enter') addTodo();
+        (event.key === 'Enter') ? addTodo() : setTodo(event.target.value);
     }
 
     const handleChange = event => {
-        setTodo(event.target.value);
+      setTodo(event.target.value);
     };
 
-    const BootstrapInput = styled(InputBase)(({ theme }) => ({
-        'label + &': {
-          marginTop: theme.spacing(3)
-        },
-        '& .MuiInputBase-input': {
-          borderRadius: 4,
-          position: 'relative',
-          backgroundColor: theme.palette.background.paper,
-          border: '1px solid #ced4da',
-          fontSize: 12,
-          padding: '10px 26px 10px 12px',
-          transition: theme.transitions.create(['border-color', 'box-shadow']),
-          // Use the system font instead of the default Roboto font.
-          fontFamily: [
-            '-apple-system',
-            'BlinkMacSystemFont',
-            '"Segoe UI"',
-            'Roboto',
-            '"Helvetica Neue"',
-            'Arial',
-            'sans-serif',
-            '"Apple Color Emoji"',
-            '"Segoe UI Emoji"',
-            '"Segoe UI Symbol"',
-          ].join(','),
-          '&:focus': {
-            borderRadius: 4,
-            borderColor: '#80bdff',
-            boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
-          },
-        },
-      }));
+    const handleCategoriaChange = event =>{
+      switch (event.target.value) {
 
-      const [age, setAge] = useState('');
+        case 'resetCategorias':
+          handleRestartCategorias();
+          break;
+      
+        default:
+          setCategoriaSeleccionada(event.target.value);
+          break;
+      }
+    }
 
-    return(
-        <>
+    const handleAddCategoria = () => {
+      dispatch(addCategoria())
+      setCategoriaSeleccionada(categorias[0].id)
+    }
+
+    const handleRestartCategorias = () => {
+      let categoriaCustomEnUsoFlag = false;
+      todos.forEach((todo)=>{
+        if(todo.categoriaId > 3){
+          categoriaCustomEnUsoFlag = true;
+        }
+      })
+      setCategoriaSeleccionada(1);
+      if(categoriaCustomEnUsoFlag){
+        handleClickOpen()
+      }else{
+        dispatch(resetCategorias())
+      }
+    }
+
+    return(<>
+    <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>Atención</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Alguna de las categorías creadas está siendo utilizada por
+            una o más tareas. Por favor cambie la/s categoría/s de esta/s
+            tarea/s para continuar con la operación.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Ok</Button>
+        </DialogActions>
+      </Dialog>
+        <FlexInputContainer>
+              <Select
+                value={categoriaSeleccionada}
+                onChange={handleCategoriaChange}
+                sx={{marginRight: '10px'}}
+                variant="standard"
+                disableUnderline
+                IconComponent={() => null}
+                inputProps={{ sx:{padding: '0 10px !important'} }}
+              >
+                {categorias.map((categoria, id)=>{
+                  return(
+                    <MenuItem key={id} value={categoria.id}>
+                      <CircleIcon sx={{color: categoria.color, fontSize: '24pt'}}/>
+                    </MenuItem>
+                  )
+                })}
+                  <MenuItem onClick={handleAddCategoria}>
+                    <AddIcon sx={{fontSize: '24pt'}}/>
+                  </MenuItem>
+                  <MenuItem value={'resetCategorias'}>
+                    <RestartAltIcon sx={{fontSize: '24pt'}}/>
+                  </MenuItem>
+              </Select>
             <TextField onKeyDown={checkIsEnter} onChange={handleChange} value={todo} fullWidth label="Agregar nueva nota" variant="outlined" InputProps={{endAdornment:<Tooltip title="Agregar">
                 <IconButton onClick={addTodo}>
                     <AddIcon />
                 </IconButton>
-            </Tooltip>, startAdornment:
-              <Select
-                value={age}
-                onChange={handleChange}
-                displayEmpty
-                sx={{marginRight: '10px'}}
-                variant="standard"
-                disableUnderline
-              >
-                <MenuItem value="">
-                    <CircleIcon sx={{color: 'red'}}/>
-                </MenuItem>
-                <MenuItem value={10}><CircleIcon/></MenuItem>
-                <MenuItem value={20}><CircleIcon/></MenuItem>
-                <MenuItem value={30}><CircleIcon/></MenuItem>
-              </Select>}}/>
-        </>
+            </Tooltip>
+              }}/>
+            </FlexInputContainer>
+          </>
     )
 }

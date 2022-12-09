@@ -3,6 +3,7 @@ import todoListSlice from './states/todoListSlice'
 import storage from 'redux-persist/lib/storage';
 import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
+import categoriasSlice from './states/categoriasSlice';
 
 const persistConfig = {
     key: 'todos',
@@ -12,6 +13,7 @@ const persistConfig = {
 
 const reducer = combineReducers({
     todoList: todoListSlice,
+    categoriasSlice: categoriasSlice
 })
 
 const persistedReducer = persistReducer(persistConfig, reducer)
